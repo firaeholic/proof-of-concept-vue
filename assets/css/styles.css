@@ -1,0 +1,97 @@
+/* Layout */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: sans-serif;
+}
+.sidebar {
+  width: 200px;
+  background: #f5f5f5;
+  padding: 1em;
+  box-sizing: border-box;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar li {
+  margin: 0.5em 0;
+}
+.sidebar li.active a {
+  font-weight: bold;
+  color: #007acc;
+}
+.sidebar a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.main-content {
+  flex: 1;
+  padding: 1em;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Core wrappers & controls */
+.core-outer {
+  padding: 4px;
+  border: 1px solid #333;
+  margin-bottom: 1em;
+}
+.core-inner {
+  padding: 2px;
+}
+.core-input,
+.core-textarea {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* basic theme */
+.basic-outer {
+  background: #fafafa;
+}
+.basic-inner {
+  border: 1px solid #999;
+}
+.basic-input {
+  border: 1px solid #999;
+}
+.basic-textarea {
+  border: 1px solid #777;
+}
+
+/* dash theme */
+.dash-outer {
+  background: #f0f8ff;
+}
+.dash-inner {
+  border: 1px dashed #00f;
+}
+.dash-input {
+  border: 1px solid #00f;
+}
+.dash-textarea {
+  border: 1px solid #00a;
+}
+
+/* profile theme */
+.profile-outer {
+  background: #fff0f6;
+}
+.profile-inner {
+  border: 1px solid #f06292;
+}
+.profile-input {
+  border: 1px solid #c2185b;
+}
+.profile-textarea {
+  border: 1px solid #ad1457;
+}
+
+button {
+  margin-bottom: 1em;
+}
