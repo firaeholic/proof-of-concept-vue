@@ -1,5 +1,5 @@
 <template>
-  <div class="kyc-container">
+  <OuterWrapper>
     <div class="kyc-form">
       <h2>Creator KYC Verification</h2>
       <p>As a creator, you need to complete KYC verification to access all features.</p>
@@ -77,16 +77,20 @@
         <p><strong>KYC Status:</strong> {{ userInfo.kyc === '1' ? 'Verified' : 'Pending' }}</p>
       </div>
     </div>
-  </div>
+  </OuterWrapper>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import OuterWrapper from '../components/OuterWrapper.vue'
 
 export default {
   name: 'CreatorKycTemplate',
+  components: {
+    OuterWrapper
+  },
   setup() {
     const router = useRouter()
     const fullName = ref('')

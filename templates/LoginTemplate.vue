@@ -1,33 +1,53 @@
 <template>
-  <div class="login-container">
+  <OuterWrapper variant="centered">
     <div class="login-form">
-      <h2>Login</h2>
+      <h2>{{ $t('login.title') }}</h2>
+      <p class="subtitle">{{ $t('login.subtitle') }}</p>
+      
       <form @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="email">Email:</label>
+        <FormGroup :label="$t('login.email') + ':' " field-id="email">
           <input
             id="email"
             v-model="email"
             type="email"
             required
-            placeholder="Enter your email"
+            :placeholder="$t('login.email')"
           />
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
+        </FormGroup>
+        <FormGroup :label="$t('login.password') + ':' " field-id="password">
           <input
             id="password"
             v-model="password"
             type="password"
             required
-            placeholder="Enter your password"
+            :placeholder="$t('login.password')"
           />
+        </FormGroup>
+        
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" v-model="rememberMe">
+            {{ $t('login.rememberMe') }}
+          </label>
         </div>
-        <button type="submit" :disabled="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
+        
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Logging in...' : $t('login.loginButton') }}
+        </button>
       </form>
       
       <div v-if="error" class="error-message">
         {{ error }}
+      </div>
+      
+      <div class="login-footer">
+        <p>
+          <a href="#" class="forgot-link">{{ $t('login.forgotPassword') }}</a>
+        </p>
+        <p>
+          {{ $t('login.noAccount') }} 
+          <a href="#" class="signup-link">{{ $t('login.signUp') }}</a>
+        </p>
       </div>
       
       <div class="test-users">
@@ -42,22 +62,29 @@
         <p>Password for all: <strong>password123</strong></p>
       </div>
     </div>
-  </div>
+  </OuterWrapper>
 </template>
 
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import FormGroup from '../components/FormGroup.vue'
+import OuterWrapper from '../components/OuterWrapper.vue'
 
 export default {
   name: 'LoginTemplate',
+  components: {
+    FormGroup,
+    OuterWrapper
+  },
   setup() {
     const router = useRouter()
     const email = ref('')
     const password = ref('')
     const loading = ref(false)
     const error = ref('')
+    const rememberMe = ref(false)
 
     const mockLogin = async (email, password) => {
       try {
@@ -122,6 +149,7 @@ export default {
       password,
       loading,
       error,
+      rememberMe,
       handleLogin
     }
   }
@@ -129,14 +157,6 @@ export default {
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 20px;
-}
-
 .login-form {
   background: white;
   padding: 2rem;
@@ -146,15 +166,63 @@ export default {
   max-width: 400px;
 }
 
-.form-group {
-  margin-bottom: 1rem;
+.login-form h2 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  text-align: center;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+.subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
 }
+
+
+
+.form-options {
+  margin: 1rem 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.login-footer p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.forgot-link,
+.signup-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.forgot-link:hover,
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+
 
 input {
   width: 100%;

@@ -1,95 +1,101 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <h1>Fan Dashboard</h1>
-      <div class="user-info">
-        <span>Welcome, {{ userInfo.email }}</span>
-        <button @click="logout" class="logout-btn">Logout</button>
-      </div>
-    </div>
+  <DashboardLayout :user-email="userInfo.email" @logout="logout">
+    <template #title>Fan Dashboard</template>
     
-    <div class="dashboard-content">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Following</h3>
-          <p class="stat-number">42</p>
-        </div>
-        <div class="stat-card">
-          <h3>Favorites</h3>
-          <p class="stat-number">156</p>
-        </div>
-        <div class="stat-card">
-          <h3>Purchases</h3>
-          <p class="stat-number">23</p>
-        </div>
-        <div class="stat-card">
-          <h3>Spent</h3>
-          <p class="stat-number">$234</p>
-        </div>
-      </div>
+    <StatsGrid>
+      <StatCard number-color="#28a745">
+        <template #title>Following</template>
+        <template #number>42</template>
+      </StatCard>
+      <StatCard number-color="#28a745">
+        <template #title>Favorites</template>
+        <template #number>156</template>
+      </StatCard>
+      <StatCard number-color="#28a745">
+        <template #title>Purchases</template>
+        <template #number>23</template>
+      </StatCard>
+      <StatCard number-color="#28a745">
+        <template #title>Spent</template>
+        <template #number>$234</template>
+      </StatCard>
+    </StatsGrid>
       
-      <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-grid">
-          <button class="action-btn">🔍 Discover Content</button>
-          <button class="action-btn">❤️ View Favorites</button>
-          <button class="action-btn">👥 Manage Following</button>
-          <button class="action-btn">🛒 Purchase History</button>
-        </div>
-      </div>
+    <ActionGrid>
+      <ActionButton>🔍 Discover Content</ActionButton>
+      <ActionButton>❤️ View Favorites</ActionButton>
+      <ActionButton>👥 Manage Following</ActionButton>
+      <ActionButton>🛒 Purchase History</ActionButton>
+    </ActionGrid>
       
-      <div class="recommended-content">
-        <h2>Recommended for You</h2>
-        <div class="content-grid">
-          <div class="content-card">
-            <div class="content-image">📸</div>
-            <h4>Amazing Photography</h4>
-            <p>By @photographer123</p>
-            <span class="price">$5.99</span>
-          </div>
-          <div class="content-card">
-            <div class="content-image">🎨</div>
-            <h4>Digital Art Collection</h4>
-            <p>By @artist456</p>
-            <span class="price">$12.99</span>
-          </div>
-          <div class="content-card">
-            <div class="content-image">🎵</div>
-            <h4>Exclusive Music Track</h4>
-            <p>By @musician789</p>
-            <span class="price">$3.99</span>
-          </div>
+    <ContentSection>
+      <template #title>Recommended Content</template>
+      <div class="content-grid">
+        <div class="content-card">
+          <div class="content-image">🎵</div>
+          <h4>Music Album</h4>
+          <p>By Artist Name</p>
+          <span class="price">$9.99</span>
+        </div>
+        <div class="content-card">
+          <div class="content-image">📚</div>
+          <h4>E-book</h4>
+          <p>By Author Name</p>
+          <span class="price">$14.99</span>
+        </div>
+        <div class="content-card">
+          <div class="content-image">🎬</div>
+          <h4>Video Course</h4>
+          <p>By Instructor</p>
+          <span class="price">$29.99</span>
         </div>
       </div>
+    </ContentSection>
       
-      <div class="recent-activity">
-        <h2>Recent Activity</h2>
-        <div class="activity-list">
-          <div class="activity-item">
-            <span class="activity-time">1 hour ago</span>
-            <span class="activity-text">Liked "Sunset Photography" by @photographer123</span>
-          </div>
-          <div class="activity-item">
-            <span class="activity-time">3 hours ago</span>
-            <span class="activity-text">Purchased "Digital Art Pack" for $12.99</span>
-          </div>
-          <div class="activity-item">
-            <span class="activity-time">1 day ago</span>
-            <span class="activity-text">Started following @newartist</span>
-          </div>
+    <ContentSection>
+      <template #title>Recent Activity</template>
+      <div class="activity-list">
+        <div class="activity-item">
+          <span class="activity-icon">❤️</span>
+          <span class="activity-text">Liked "Amazing Content" by Creator123</span>
+          <span class="activity-time">2 hours ago</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-icon">🛒</span>
+          <span class="activity-text">Purchased "Digital Art Pack"</span>
+          <span class="activity-time">1 day ago</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-icon">👥</span>
+          <span class="activity-text">Started following @newcreator</span>
+          <span class="activity-time">3 days ago</span>
         </div>
       </div>
-    </div>
-  </div>
+    </ContentSection>
+  </DashboardLayout>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import DashboardLayout from '../components/DashboardLayout.vue'
+import StatsGrid from '../components/StatsGrid.vue'
+import StatCard from '../components/StatCard.vue'
+import ActionGrid from '../components/ActionGrid.vue'
+import ActionButton from '../components/ActionButton.vue'
+import ContentSection from '../components/ContentSection.vue'
 
 export default {
   name: 'FanDashboardTemplate',
+  components: {
+    DashboardLayout,
+    StatsGrid,
+    StatCard,
+    ActionGrid,
+    ActionButton,
+    ContentSection
+  },
   setup() {
     const router = useRouter()
     const userInfo = ref({})

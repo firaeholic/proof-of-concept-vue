@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-setup-container">
+  <OuterWrapper variant="centered">
     <div class="profile-setup-form">
       <h2>Profile Setup</h2>
       <p>Welcome! Please complete your profile setup.</p>
@@ -48,16 +48,20 @@
         <p><strong>Role:</strong> {{ userInfo.role }}</p>
       </div>
     </div>
-  </div>
+  </OuterWrapper>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import OuterWrapper from '../components/OuterWrapper.vue'
 
 export default {
   name: 'ProfileSetupTemplate',
+  components: {
+    OuterWrapper
+  },
   setup() {
     const router = useRouter()
     const firstName = ref('')
@@ -118,14 +122,6 @@ export default {
 </script>
 
 <style scoped>
-.profile-setup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 20px;
-}
-
 .profile-setup-form {
   background: white;
   padding: 2rem;

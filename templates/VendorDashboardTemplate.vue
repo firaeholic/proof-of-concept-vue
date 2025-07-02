@@ -1,45 +1,35 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <h1>Vendor Dashboard</h1>
-      <div class="user-info">
-        <span>Welcome, {{ userInfo.email }}</span>
-        <button @click="logout" class="logout-btn">Logout</button>
-      </div>
-    </div>
+  <DashboardLayout :user-email="userInfo.email" @logout="logout">
+    <template #title>Vendor Dashboard</template>
     
-    <div class="dashboard-content">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Products</h3>
-          <p class="stat-number">87</p>
-        </div>
-        <div class="stat-card">
-          <h3>Orders</h3>
-          <p class="stat-number">342</p>
-        </div>
-        <div class="stat-card">
-          <h3>Revenue</h3>
-          <p class="stat-number">$12,456</p>
-        </div>
-        <div class="stat-card">
-          <h3>Customers</h3>
-          <p class="stat-number">234</p>
-        </div>
-      </div>
+    <StatsGrid>
+      <StatCard number-color="#6f42c1">
+        <template #title>Products</template>
+        <template #number>87</template>
+      </StatCard>
+      <StatCard number-color="#6f42c1">
+        <template #title>Orders</template>
+        <template #number>342</template>
+      </StatCard>
+      <StatCard number-color="#6f42c1">
+        <template #title>Revenue</template>
+        <template #number>$12,456</template>
+      </StatCard>
+      <StatCard number-color="#6f42c1">
+        <template #title>Customers</template>
+        <template #number>234</template>
+      </StatCard>
+    </StatsGrid>
       
-      <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-grid">
-          <button class="action-btn">📦 Add Product</button>
-          <button class="action-btn">📊 Sales Analytics</button>
-          <button class="action-btn">🛒 Manage Orders</button>
-          <button class="action-btn">👥 Customer Support</button>
-        </div>
-      </div>
+    <ActionGrid>
+      <ActionButton>📦 Add Product</ActionButton>
+      <ActionButton>📊 Sales Analytics</ActionButton>
+      <ActionButton>🛒 Manage Orders</ActionButton>
+      <ActionButton>👥 Customer Support</ActionButton>
+    </ActionGrid>
       
-      <div class="recent-orders">
-        <h2>Recent Orders</h2>
+      <ContentSection>
+        <template #title>Recent Orders</template>
         <div class="orders-table">
           <div class="order-header">
             <span>Order ID</span>
@@ -66,10 +56,10 @@
             <span class="status-delivered">Delivered</span>
           </div>
         </div>
-      </div>
+      </ContentSection>
       
-      <div class="top-products">
-        <h2>Top Selling Products</h2>
+      <ContentSection>
+        <template #title>Top Selling Products</template>
         <div class="products-grid">
           <div class="product-card">
             <div class="product-image">📱</div>
@@ -90,18 +80,31 @@
             <span class="price">$199.99</span>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </ContentSection>
+  </DashboardLayout>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import DashboardLayout from '../components/DashboardLayout.vue'
+import StatsGrid from '../components/StatsGrid.vue'
+import StatCard from '../components/StatCard.vue'
+import ActionGrid from '../components/ActionGrid.vue'
+import ActionButton from '../components/ActionButton.vue'
+import ContentSection from '../components/ContentSection.vue'
 
 export default {
   name: 'VendorDashboardTemplate',
+  components: {
+    DashboardLayout,
+    StatsGrid,
+    StatCard,
+    ActionGrid,
+    ActionButton,
+    ContentSection
+  },
   setup() {
     const router = useRouter()
     const userInfo = ref({})

@@ -1,36 +1,42 @@
 <template>
-  <div class="container">
-    <nav class="sidebar">
-      <ul>
-        <li :class="{ active: pageType === 'basic' }">
-          <router-link to="/basic">Basic</router-link>
-        </li>
-        <li :class="{ active: pageType === 'dash' }">
-          <router-link to="/dash">Dashboard</router-link>
-        </li>
-        <li :class="{ active: pageType === 'profile' }">
-          <router-link to="/profile">Profile</router-link>
-        </li>
-      </ul>
-    </nav>
+  <!-- I18n Layout for login routes -->
+  <div v-if="isI18nRoute" class="i18n-layout">
     <main class="main-content">
-      <router-view v-slot="{ Component }">
-        <keep-alive include="DashboardTemplate,ProfileTemplate">
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
+      <router-view />
     </main>
   </div>
+  
+  <!-- Existing layout for legacy routes -->
+  <OuterWrapper v-else>
+    <TwoColumnLayout>
+      <template #left>
+        <LeftSidebar />
+      </template>
+      <template #right>
+        <MainContent />
+      </template>
+    </TwoColumnLayout>
+  </OuterWrapper>
 </template>
 
 <script>
-import { ref, provide, onMounted, watch } from 'vue'
+import { ref, provide, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { prefetchDependencies } from './utils/dependency-loader.js'
 import { setPage } from './assets/js/global-events.js'
+import OuterWrapper from './components/OuterWrapper.vue'
+import TwoColumnLayout from './components/TwoColumnLayout.vue'
+import LeftSidebar from './components/LeftSidebar.vue'
+import MainContent from './components/MainContent.vue'
 
 export default {
   name: 'App',
+  components: {
+    OuterWrapper,
+    TwoColumnLayout,
+    LeftSidebar,
+    MainContent
+  },
   setup() {
     const name = ref('')
     const notes = ref('')
@@ -65,18 +71,48 @@ export default {
       updateNotes
     })
     
-    // Provide route for components to access current page type
+    // Provide route and pageType for components to access current page type
     provide('$route', route)
+    provide('pageType', pageType)
 
     function switchPage(page) {
       setPage(page, pageType)
     }
 
+    // Computed property to detect i18n routes
+    const isI18nRoute = computed(() => {
+      return ['/login', '/en/login', '/am/login'].includes(route.path)
+    })
+
     return {
       pageType,
       switchPage,
-      router
+      router,
+      isI18nRoute
     }
   }
 }
 </script>
+
+<style scoped>
+/* App-specific styles can go here */
+
+/* I18n Layout Styles */
+.i18n-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ecf0f1;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+}
+</style>

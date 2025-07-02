@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "ግባ",
+    "subtitle": "እንኳን ደህና መጡ! እባክዎ ወደ መለያዎ ይግቡ።",
+    "email": "ኢሜይል",
+    "password": "የይለፍ ቃል",
+    "loginButton": "ግባ",
+    "rememberMe": "አስታውሰኝ",
+    "forgotPassword": "የይለፍ ቃልዎን ረስተዋል?",
+    "noAccount": "መለያ የለዎትም?",
+    "signUp": "ይመዝገቡ"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "Login",
+    "subtitle": "Welcome back! Please sign in to your account.",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Login",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+  }
+}

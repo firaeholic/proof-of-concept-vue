@@ -1,32 +1,25 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <h1>Creator Dashboard</h1>
-      <div class="user-info">
-        <span>Welcome, {{ userInfo.email }}</span>
-        <button @click="logout" class="logout-btn">Logout</button>
-      </div>
-    </div>
+  <DashboardLayout :user-email="userInfo.email" @logout="logout">
+    <template #title>Creator Dashboard</template>
     
-    <div class="dashboard-content">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Total Content</h3>
-          <p class="stat-number">24</p>
-        </div>
-        <div class="stat-card">
-          <h3>Followers</h3>
-          <p class="stat-number">1,234</p>
-        </div>
-        <div class="stat-card">
-          <h3>Earnings</h3>
-          <p class="stat-number">$2,456</p>
-        </div>
-        <div class="stat-card">
-          <h3>Views</h3>
-          <p class="stat-number">45,678</p>
-        </div>
-      </div>
+    <StatsGrid>
+      <StatCard number-color="#007bff">
+        <template #title>Total Content</template>
+        <template #number>24</template>
+      </StatCard>
+      <StatCard number-color="#007bff">
+        <template #title>Followers</template>
+        <template #number>1,234</template>
+      </StatCard>
+      <StatCard number-color="#007bff">
+        <template #title>Earnings</template>
+        <template #number>$2,456</template>
+      </StatCard>
+      <StatCard number-color="#007bff">
+        <template #title>Views</template>
+        <template #number>45,678</template>
+      </StatCard>
+    </StatsGrid>
       
       <div class="kyc-status" v-if="userInfo.kyc === '0'">
         <div class="alert alert-warning">
@@ -36,18 +29,15 @@
         </div>
       </div>
       
-      <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-grid">
-          <button class="action-btn">📝 Create Content</button>
-          <button class="action-btn">📊 View Analytics</button>
-          <button class="action-btn">💰 Earnings Report</button>
-          <button class="action-btn">👥 Manage Followers</button>
-        </div>
-      </div>
+      <ActionGrid>
+        <ActionButton>📝 Create Content</ActionButton>
+        <ActionButton>📊 View Analytics</ActionButton>
+        <ActionButton>💰 Earnings Report</ActionButton>
+        <ActionButton>👥 Manage Followers</ActionButton>
+      </ActionGrid>
       
-      <div class="recent-activity">
-        <h2>Recent Activity</h2>
+      <ContentSection>
+        <template #title>Recent Activity</template>
         <div class="activity-list">
           <div class="activity-item">
             <span class="activity-time">2 hours ago</span>
@@ -62,18 +52,31 @@
             <span class="activity-text">Earnings: $45.67 from premium content</span>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </ContentSection>
+  </DashboardLayout>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
+import DashboardLayout from '../components/DashboardLayout.vue'
+import StatsGrid from '../components/StatsGrid.vue'
+import StatCard from '../components/StatCard.vue'
+import ActionGrid from '../components/ActionGrid.vue'
+import ActionButton from '../components/ActionButton.vue'
+import ContentSection from '../components/ContentSection.vue'
 
 export default {
   name: 'CreatorDashboardTemplate',
+  components: {
+    DashboardLayout,
+    StatsGrid,
+    StatCard,
+    ActionGrid,
+    ActionButton,
+    ContentSection
+  },
   setup() {
     const router = useRouter()
     const userInfo = ref({})
@@ -121,61 +124,6 @@ export default {
 </script>
 
 <style scoped>
-.dashboard-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logout-btn {
-  padding: 0.5rem 1rem;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  background: #c82333;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #007bff;
-  margin: 0.5rem 0;
-}
 
 .kyc-status {
   margin-bottom: 2rem;
@@ -205,28 +153,6 @@ export default {
 
 .btn-primary:hover {
   background: #0056b3;
-}
-
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.action-btn {
-  padding: 1rem;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.action-btn:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
 }
 
 .activity-list {
