@@ -76,9 +76,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { jwtDecode } from 'jwt-decode'
+import { useDashboard } from '../composables/useDashboard.js'
 import DashboardLayout from '../components/DashboardLayout.vue'
 import StatsGrid from '../components/StatsGrid.vue'
 import StatCard from '../components/StatCard.vue'
@@ -97,36 +95,8 @@ export default {
     ContentSection
   },
   setup() {
-    const router = useRouter()
-    const userInfo = ref({})
-
-    onMounted(() => {
-      const token = localStorage.getItem('authToken')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-      
-      try {
-        const decoded = jwtDecode(token)
-        userInfo.value = {
-          email: decoded.email,
-          role: decoded['custom:role']
-        }
-        
-        if (decoded['custom:role'] !== 'fan') {
-          router.push(`/${decoded['custom:role']}/dashboard`)
-        }
-      } catch (err) {
-        console.error('Invalid token:', err)
-        router.push('/login')
-      }
-    })
-
-    const logout = () => {
-      localStorage.removeItem('authToken')
-      router.push('/login')
-    }
+    // Use shared dashboard composable
+    const { userInfo, logout } = useDashboard()
 
     return {
       userInfo,

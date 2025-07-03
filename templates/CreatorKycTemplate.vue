@@ -81,9 +81,9 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { jwtDecode } from 'jwt-decode'
+import { useDashboard } from '../composables/useDashboard.js'
 import OuterWrapper from '../components/OuterWrapper.vue'
 
 export default {
@@ -92,41 +92,16 @@ export default {
     OuterWrapper
   },
   setup() {
+    // Use shared dashboard composable
+    const { userInfo, logout } = useDashboard()
     const router = useRouter()
+    
     const fullName = ref('')
     const dateOfBirth = ref('')
     const address = ref('')
     const idNumber = ref('')
     const bankAccount = ref('')
     const loading = ref(false)
-    const userInfo = ref({})
-
-    onMounted(() => {
-      const token = localStorage.getItem('authToken')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-      
-      try {
-        const decoded = jwtDecode(token)
-        userInfo.value = {
-          email: decoded.email,
-          role: decoded['custom:role'],
-          kyc: decoded['custom:kyc']
-        }
-        
-        // If not a creator or already verified, redirect
-        if (decoded['custom:role'] !== 'creator') {
-          router.push(`/${decoded['custom:role']}/dashboard`)
-        } else if (decoded['custom:kyc'] === '1') {
-          router.push('/creator/dashboard')
-        }
-      } catch (err) {
-        console.error('Invalid token:', err)
-        router.push('/login')
-      }
-    })
 
     const handleSubmit = async () => {
       loading.value = true

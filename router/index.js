@@ -1,15 +1,51 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
 import { loadTranslations, setLocale, isLocaleSupported, DEFAULT_LOCALE } from '../i18n/index.js'
-import { 
-  AUTH_REQUIRED_ROUTES, 
-  getRequiredRole, 
-  shouldRedirectLoggedIn, 
-  getDashboardRoute 
-} from '../routes.js'
 
 // Import components
 import BasicTemplate from '../templates/BasicTemplate.vue'
+
+// Routes that require authentication
+export const AUTH_REQUIRED_ROUTES = [
+  '/profile-setup',
+  '/creator/kyc',
+  '/creator/dashboard',
+  '/fan/dashboard',
+  '/vendor/dashboard',
+  '/agent/dashboard'
+]
+
+// Role-specific route mappings
+export const ROLE_ROUTES = {
+  'creator': ['/creator/kyc', '/creator/dashboard'],
+  'fan': ['/fan/dashboard'],
+  'vendor': ['/vendor/dashboard'],
+  'agent': ['/agent/dashboard']
+}
+
+// Routes that should redirect logged-in users
+export const REDIRECT_LOGGED_IN_ROUTES = [
+  '/',
+  '/en/login',
+  '/am/login',
+  '/signup'
+]
+
+// Helper functions for route checking
+export const requiresAuth = (path) => AUTH_REQUIRED_ROUTES.includes(path)
+
+export const getRequiredRole = (path) => {
+  for (const [role, paths] of Object.entries(ROLE_ROUTES)) {
+    if (paths.includes(path)) {
+      return role
+    }
+  }
+  return null
+}
+
+export const shouldRedirectLoggedIn = (path) => REDIRECT_LOGGED_IN_ROUTES.includes(path)
+
+export const getDashboardRoute = (role) => `/${role}/dashboard`
 
 // Define routes
 const routes = [
@@ -78,6 +114,13 @@ const routes = [
     meta: { requiresAuth: true, role: 'agent' }
   },
   
+  // Demo and utility routes
+  { 
+    path: '/viewport-demo', 
+    component: () => import('../templates/ViewportDemoTemplate.vue'), 
+    name: 'viewport-demo'
+  },
+  
   // Legacy routes for reference
   { 
     path: '/basic', 
@@ -103,11 +146,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
-
-// Helper function to check if route requires auth
-function requiresAuth(fullPath) {
-  return AUTH_REQUIRED_ROUTES.includes(fullPath)
-}
 
 // Helper function to check if route is a login route
 function isLoginRoute(fullPath) {

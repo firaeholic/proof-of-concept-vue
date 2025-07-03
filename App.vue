@@ -81,7 +81,7 @@ export default {
 
     // Computed property to detect i18n routes
     const isI18nRoute = computed(() => {
-      return ['/login', '/en/login', '/am/login'].includes(route.path)
+      return ['/en/login', '/am/login'].includes(route.path)
     })
 
     return {

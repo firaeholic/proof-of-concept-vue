@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { jwtDecode } from 'jwt-decode'
+import { useDashboard } from '../composables/useDashboard.js'
 import OuterWrapper from '../components/OuterWrapper.vue'
 
 export default {
@@ -63,31 +63,14 @@ export default {
     OuterWrapper
   },
   setup() {
+    // Use shared dashboard composable
+    const { userInfo, logout } = useDashboard()
     const router = useRouter()
+    
     const firstName = ref('')
     const lastName = ref('')
     const phone = ref('')
     const loading = ref(false)
-    const userInfo = ref({})
-
-    onMounted(() => {
-      const token = localStorage.getItem('authToken')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-      
-      try {
-        const decoded = jwtDecode(token)
-        userInfo.value = {
-          email: decoded.email,
-          role: decoded['custom:role']
-        }
-      } catch (err) {
-        console.error('Invalid token:', err)
-        router.push('/login')
-      }
-    })
 
     const handleSubmit = async () => {
       loading.value = true
@@ -96,14 +79,10 @@ export default {
       await new Promise(resolve => setTimeout(resolve, 1000))
       
       // After profile setup, redirect based on role and KYC status
-      const token = localStorage.getItem('authToken')
-      const decoded = jwtDecode(token)
-      
-      if (decoded['custom:role'] === 'creator' && decoded['custom:kyc'] === '0') {
+      if (userInfo.value.role === 'creator') {
         router.push('/creator/kyc')
       } else {
-        const role = decoded['custom:role']
-        router.push(`/${role}/dashboard`)
+        router.push(`/${userInfo.value.role}/dashboard`)
       }
       
       loading.value = false

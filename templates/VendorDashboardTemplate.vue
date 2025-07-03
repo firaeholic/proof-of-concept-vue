@@ -85,15 +85,14 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { jwtDecode } from 'jwt-decode'
 import DashboardLayout from '../components/DashboardLayout.vue'
 import StatsGrid from '../components/StatsGrid.vue'
 import StatCard from '../components/StatCard.vue'
 import ActionGrid from '../components/ActionGrid.vue'
 import ActionButton from '../components/ActionButton.vue'
 import ContentSection from '../components/ContentSection.vue'
+import { useViewport } from '../composables/useViewport.js'
+import { useDashboard } from '../composables/useDashboard.js'
 
 export default {
   name: 'VendorDashboardTemplate',
@@ -106,40 +105,36 @@ export default {
     ContentSection
   },
   setup() {
-    const router = useRouter()
-    const userInfo = ref({})
-
-    onMounted(() => {
-      const token = localStorage.getItem('authToken')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-      
-      try {
-        const decoded = jwtDecode(token)
-        userInfo.value = {
-          email: decoded.email,
-          role: decoded['custom:role']
-        }
-        
-        if (decoded['custom:role'] !== 'vendor') {
-          router.push(`/${decoded['custom:role']}/dashboard`)
-        }
-      } catch (err) {
-        console.error('Invalid token:', err)
-        router.push('/login')
-      }
-    })
-
-    const logout = () => {
-      localStorage.removeItem('authToken')
-      router.push('/login')
-    }
+    // Use shared dashboard composable
+    const { userInfo, logout } = useDashboard()
+    
+    // Use viewport composable for responsive design
+    const {
+      width,
+      height,
+      orientation,
+      isMobile,
+      isTablet,
+      isDesktop,
+      isMobilePortrait,
+      isMobileLandscape,
+      isTabletPortrait,
+      isTabletLandscape
+    } = useViewport()
 
     return {
       userInfo,
-      logout
+      logout,
+      width,
+      height,
+      orientation,
+      isMobile,
+      isTablet,
+      isDesktop,
+      isMobilePortrait,
+      isMobileLandscape,
+      isTabletPortrait,
+      isTabletLandscape
     }
   }
 }
